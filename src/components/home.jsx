@@ -21,7 +21,6 @@ const Home = () => {
     });
     const [isDarkMode, setIsDarkMode] = useState(false);
 
-    // Сохраняем состояние корзины в localStorage при изменении
     useEffect(() => {
         localStorage.setItem("basket", JSON.stringify(basketItems));
     }, [basketItems]);
