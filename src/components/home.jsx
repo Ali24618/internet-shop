@@ -7,7 +7,7 @@ import $ from 'jquery';
 const Home = () => {
     const [query, setQuery] = useState('');
     const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [filter, setFilter] = useState([]);
     const [block, setBlock] = useState(true);
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(Infinity);
@@ -15,7 +15,7 @@ const Home = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [exactPrice, setExactPrice] = useState('');
     const [basketItems, setBasketItems] = useState(() => {
-        // Загружаем корзину из localStorage при первой загрузке
+
         const savedBasket = localStorage.getItem("basket");
         return savedBasket ? JSON.parse(savedBasket) : [];
     });
@@ -25,17 +25,17 @@ const Home = () => {
         localStorage.setItem("basket", JSON.stringify(basketItems));
     }, [basketItems]);
 
-    const fetchProducts = async () => {
+    const famous = async () => {
         try {
             const response = await axios.get('https://api.escuelajs.co/api/v1/products');
             setProducts(response.data);
-            setFilteredProducts(response.data);
+            setFilter(response.data);
         } catch (error) {
             console.error("Error fetching products", error);
         }
     };
 
-    const fetchCategories = async () => {
+    const catego = async () => {
         try {
             const response = await axios.get('https://api.escuelajs.co/api/v1/categories');
             setCategories(response.data);
@@ -52,7 +52,7 @@ const Home = () => {
             (category === '' || product.category.id === parseInt(category)) &&
             (exact === '' || product.price === parseFloat(exact))
         );
-        setFilteredProducts(filtered);
+        setFilter(filtered);
         setBlock(filtered.length === 0);
     };
 
@@ -141,8 +141,8 @@ const Home = () => {
         }
     }, []);
     useEffect(() => {
-        fetchProducts();
-        fetchCategories();
+        famous();
+        catego();
     }, []);
 
     return (
@@ -192,7 +192,7 @@ const Home = () => {
                 <div className="row">
                     <div className="col-md-12 ">
                         <div className="row">
-                            {filteredProducts.map(product => (
+                            {filter.map(product => (
                                 <div className="col-6 col-md-4 col-lg-3 mb-4" key={product.id}>
                                     <div className="card shadow">
                                         <a href={'/prodid/' + product.id}>
